@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>BorderBound Level Editor</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="drawable/icon_web.svg">
+
+    <link rel="stylesheet" href="res/bootstrap-4.3.1.min.css">
+    <!-- jQuery 3.1.1 -->
+    <script src="res/jquery-3.1.1.min.js"></script>
+    <!-- Popper.js (required for Bootstrap JS) -->
+    <script src="res/popper.min.js"></script>
+    <!-- Bootstrap JS (requires Popper) -->
+    <script src="res/bootstrap-4.3.1.min.js"></script>
+
+    <style>
+        body {
+            user-select: none;
+        }
+
+        .field {
+            position: relative;
+            width: 70px;
+            height: 70px;
+            cursor: pointer;
+        }
+
+        .field img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 70px;
+            height: 70px;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 2px;
+        }
+
+        .toolbox-item {
+            display: none;
+        }
+
+        .toolbox-item.toolbox-item-empty {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar navbar-light bg-light d-flex justify-content-between align-items-center">
+        <!-- Left side -->
+        <div class="d-flex align-items-center">
+            <h1 class="navbar-brand mb-0">
+                <img src="drawable/icon_web.svg" width="30" height="30">
+                BorderBound! Level Editor
+            </h1>
+        </div>
+
+        <!-- Right side -->
+        <div>
+            <button class="btn btn-sm btn-success mr-1" onclick="submitLevel()">Submit</button>
+            <button class="btn btn-sm btn-danger" onclick="clearLevel()">Clear</button>
+        </div>
+    </div>
+
+
+    <!-- MAIN -->
+    <div class="container p-3">
+        <div class="row">
+
+            <!-- BOARD -->
+            <div class="col card p-2 m-2">
+                <div class="card-header">Game board</div>
+                <div class="card-body" id="boardContainer"></div>
+            </div>
+
+            <!-- TOOLBOX -->
+            <div class="col card p-2 m-2 toolbox">
+                <div class="card-header">Edit selected position</div>
+                <div class="card-body">
+
+                    <h6>Select type</h6>
+                    <table class="m-2">
+                        <tr>
+                            <!-- EMPTY -->
+                            <td>
+                                <div class="field" onclick="setType(TYPE_EMPTY); showToolbox('empty')">
+                                    <img src="./drawable/level_box_hole.png">
+                                </div>
+                            </td>
+
+                            <!-- FLOW -->
+                            <td>
+                                <div class="field" onclick="setType(TYPE_FLOW); showToolbox('flow')">
+                                    <img src="./drawable/level_box_color_none.png">
+                                    <img src="./drawable/level_box_type_flow.png">
+                                </div>
+                            </td>
+
+                            <!-- BOMB -->
+                            <td>
+                                <div class="field" onclick="setType(TYPE_BOMB); showToolbox('bomb')">
+                                    <img src="./drawable/level_box_color_none.png">
+                                    <img src="./drawable/level_box_type_bomb.png">
+                                </div>
+                            </td>
+
+                            <!-- LIMIT -->
+                            <td>
+                                <div class="field" onclick="setType(TYPE_LIMIT); showToolbox('limit')">
+                                    <img src="./drawable/level_box_color_none.png">
+                                    <img src="./drawable/level_box_type_limit_up.png">
+                                </div>
+                            </td>
+
+                            <!-- NOTHING -->
+                            <td>
+                                <div class="field" onclick="setType(TYPE_DISABLED); showToolbox('disabled')">
+                                    <img src="./drawable/level_nothing.png">
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- EMPTY TOOLBOX -->
+                    <div class="toolbox-item toolbox-item-empty">
+                        <h6>Select target color</h6>
+                        <table class="m-2">
+                            <tr>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_RED)"><img
+                                            src="./drawable/level_box_dest_color_red.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_GREEN)"><img
+                                            src="./drawable/level_box_dest_color_green.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_BLUE)"><img
+                                            src="./drawable/level_box_dest_color_blue.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_YELLOW)"><img
+                                            src="./drawable/level_box_dest_color_yellow.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_BLACK)"><img
+                                            src="./drawable/level_box_dest_color_black.png"></div>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <h6>Select prefilled color</h6>
+                        <table class="m-2">
+                            <tr>
+                                <td>
+                                    <div class="field" onclick="setPreset(-1)"><img src="./drawable/level_box_hole.png">
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setPreset(COLOR_RED)"><img
+                                            src="./drawable/level_box_hole.png"><img
+                                            src="./drawable/level_box_stone_red.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setPreset(COLOR_GREEN)"><img
+                                            src="./drawable/level_box_hole.png"><img
+                                            src="./drawable/level_box_stone_green.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setPreset(COLOR_BLUE)"><img
+                                            src="./drawable/level_box_hole.png"><img
+                                            src="./drawable/level_box_stone_blue.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setPreset(COLOR_YELLOW)"><img
+                                            src="./drawable/level_box_hole.png"><img
+                                            src="./drawable/level_box_stone_yellow.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setPreset(COLOR_BLACK)"><img
+                                            src="./drawable/level_box_hole.png"><img
+                                            src="./drawable/level_box_stone_black.png"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- FLOW TOOLBOX -->
+                    <div class="toolbox-item toolbox-item-flow">
+                        <h6>Select color</h6>
+                        <table class="m-2">
+                            <tr>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_RED)"><img
+                                            src="./drawable/level_box_color_red.png"><img
+                                            src="./drawable/level_box_type_flow.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_GREEN)"><img
+                                            src="./drawable/level_box_color_green.png"><img
+                                            src="./drawable/level_box_type_flow.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_BLUE)"><img
+                                            src="./drawable/level_box_color_blue.png"><img
+                                            src="./drawable/level_box_type_flow.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_YELLOW)"><img
+                                            src="./drawable/level_box_color_yellow.png"><img
+                                            src="./drawable/level_box_type_flow.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_BLACK)"><img
+                                            src="./drawable/level_box_color_black.png"><img
+                                            src="./drawable/level_box_type_flow.png"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- BOMB TOOLBOX -->
+                    <div class="toolbox-item toolbox-item-bomb">
+                        <h6>Select color</h6>
+                        <table class="m-2">
+                            <tr>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_RED)"><img
+                                            src="./drawable/level_box_color_red.png"><img
+                                            src="./drawable/level_box_type_bomb.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_GREEN)"><img
+                                            src="./drawable/level_box_color_green.png"><img
+                                            src="./drawable/level_box_type_bomb.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_BLUE)"><img
+                                            src="./drawable/level_box_color_blue.png"><img
+                                            src="./drawable/level_box_type_bomb.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_YELLOW)"><img
+                                            src="./drawable/level_box_color_yellow.png"><img
+                                            src="./drawable/level_box_type_bomb.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_BLACK)"><img
+                                            src="./drawable/level_box_color_black.png"><img
+                                            src="./drawable/level_box_type_bomb.png"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- LIMIT TOOLBOX -->
+                    <div class="toolbox-item toolbox-item-limit">
+                        <h6>Select color</h6>
+                        <table class="m-2">
+                            <tr>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_RED)"><img
+                                            src="./drawable/level_box_color_red.png"><img
+                                            src="./drawable/level_box_type_limit_up.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_GREEN)"><img
+                                            src="./drawable/level_box_color_green.png"><img
+                                            src="./drawable/level_box_type_limit_up.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_BLUE)"><img
+                                            src="./drawable/level_box_color_blue.png"><img
+                                            src="./drawable/level_box_type_limit_up.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_YELLOW)"><img
+                                            src="./drawable/level_box_color_yellow.png"><img
+                                            src="./drawable/level_box_type_limit_up.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setColor(COLOR_BLACK)"><img
+                                            src="./drawable/level_box_color_black.png"><img
+                                            src="./drawable/level_box_type_limit_up.png"></div>
+                                </td>
+                            </tr>
+                        </table>
+                        <h6>Select direction</h6>
+                        <table class="m-2">
+                            <tr>
+                                <td>
+                                    <div class="field" onclick="setDirection('up')"><img
+                                            src="./drawable/level_box_color_none.png"><img
+                                            src="./drawable/level_box_type_limit_up.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setDirection('down')"><img
+                                            src="./drawable/level_box_color_none.png"><img
+                                            src="./drawable/level_box_type_limit_down.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setDirection('left')"><img
+                                            src="./drawable/level_box_color_none.png"><img
+                                            src="./drawable/level_box_type_limit_left.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setDirection('right')"><img
+                                            src="./drawable/level_box_color_none.png"><img
+                                            src="./drawable/level_box_type_limit_right.png"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="field" onclick="setDirection('rotate_up')"><img
+                                            src="./drawable/level_box_color_none.png"><img
+                                            src="./drawable/level_box_type_limit_rotate_up.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setDirection('rotate_down')"><img
+                                            src="./drawable/level_box_color_none.png"><img
+                                            src="./drawable/level_box_type_limit_rotate_down.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setDirection('rotate_left')"><img
+                                            src="./drawable/level_box_color_none.png"><img
+                                            src="./drawable/level_box_type_limit_rotate_left.png"></div>
+                                </td>
+                                <td>
+                                    <div class="field" onclick="setDirection('rotate_right')"><img
+                                            src="./drawable/level_box_color_none.png"><img
+                                            src="./drawable/level_box_type_limit_rotate_right.png"></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Modal HTML (place at the end of <body>) -->
+        <div class="modal fade" id="submitLevelModal" tabindex="-1" role="dialog"
+            aria-labelledby="submitLevelModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document"> <!-- centered -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="submitLevelModalLabel">Submit Your Level</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="submitName">Your name (required)</label>
+                            <input type="text" class="form-control" id="submitName">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="submitEmail">Your email (optional)</label>
+                            <input type="email" class="form-control" id="submitEmail">
+                        </div>
+
+                        <p>Your level XML:</p>
+                        <pre id="xmlOutput" style="background:#f7f7f7; padding:10px;"></pre>
+
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="agreeCheck">
+                            <label class="form-check-label" for="agreeCheck">
+                                I agree that my level will be included in BorderBound under GPL-3 license. (required)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="submitFinalBtn">Submit</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        /* CONSTANTS */
+        const TYPE_EMPTY = 0;
+        const TYPE_FLOW = 1;
+        const TYPE_LIMIT = 2;
+        const TYPE_DISABLED = 3;
+        const TYPE_BOMB = 4;
+
+        const COLOR_RED = 1;
+        const COLOR_GREEN = 2;
+        const COLOR_BLUE = 3;
+        const COLOR_YELLOW = 4;
+        const COLOR_BLACK = 5;
+
+        const COLOR_MAP = {
+            1: "red",
+            2: "green",
+            3: "blue",
+            4: "yellow",
+            5: "black"
+        };
+
+        const COLOR_CODE = {
+            1: "r", // red
+            2: "g", // green
+            3: "b", // blue
+            4: "y", // yellow
+            5: "k"  // black
+        };
+
+
+        const ROWS = 6;
+        const COLS = 5;
+
+        let level = [];
+        let selectedR = 0;
+        let selectedC = 0;
+
+        function initLevel() {
+            for (let r = 0; r < ROWS; r++) {
+                level[r] = [];
+                for (let c = 0; c < COLS; c++) {
+                    level[r][c] = {
+                        type: TYPE_EMPTY,
+                        dest_color: COLOR_RED,
+                        preset_color: -1,
+                        direction: 'up'
+                    };
+                }
+            }
+        }
+
+        // Load level from localStorage if exists
+        function loadLevel() {
+            const saved = localStorage.getItem("borderBoundLevel");
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    if (Array.isArray(parsed) && parsed.length === ROWS) {
+                        level = parsed;
+                    } else {
+                        initLevel();
+                    }
+                } catch (e) {
+                    console.error("Error parsing saved level:", e);
+                    initLevel();
+                }
+            } else {
+                initLevel();
+            }
+        }
+
+        // On page load
+        loadLevel();
+        renderBoard();
+
+        function renderBoard() {
+            let html = `<table class="mx-auto">`;
+            for (let r = 0; r < ROWS; r++) {
+                html += "<tr>";
+                for (let c = 0; c < COLS; c++) {
+                    const cell = level[r][c];
+                    const selected = (r === selectedR && c === selectedC);
+
+                    html += `<td><div class="field" onclick="selectCell(${r},${c})">`;
+
+                    switch (cell.type) {
+                        case TYPE_EMPTY:
+                            html += `<img src="./drawable/level_box_dest_color_${COLOR_MAP[cell.dest_color]}.png">`;
+                            if (cell.preset_color && cell.preset_color !== -1) {
+                                html += `<img src="./drawable/level_box_stone_${COLOR_MAP[cell.preset_color]}.png">`;
+                            }
+                            break;
+                        case TYPE_FLOW:
+                            html += `<img src="./drawable/level_box_color_${COLOR_MAP[cell.dest_color]}.png">`;
+                            html += `<img src="./drawable/level_box_type_flow.png">`;
+                            break;
+                        case TYPE_BOMB:
+                            html += `<img src="./drawable/level_box_color_${COLOR_MAP[cell.dest_color]}.png">`;
+                            html += `<img src="./drawable/level_box_type_bomb.png">`;
+                            break;
+                        case TYPE_LIMIT:
+                            html += `<img src="./drawable/level_box_color_${COLOR_MAP[cell.dest_color]}.png">`;
+                            // show correct LIMIT image based on direction
+                            let limitImg = 'level_box_type_limit_up.png';
+                            switch (cell.direction) {
+                                case 'up': limitImg = 'level_box_type_limit_up.png'; break;
+                                case 'down': limitImg = 'level_box_type_limit_down.png'; break;
+                                case 'left': limitImg = 'level_box_type_limit_left.png'; break;
+                                case 'right': limitImg = 'level_box_type_limit_right.png'; break;
+                                case 'rotate_up': limitImg = 'level_box_type_limit_rotate_up.png'; break;
+                                case 'rotate_down': limitImg = 'level_box_type_limit_rotate_down.png'; break;
+                                case 'rotate_left': limitImg = 'level_box_type_limit_rotate_left.png'; break;
+                                case 'rotate_right': limitImg = 'level_box_type_limit_rotate_right.png'; break;
+                            }
+                            html += `<img src="./drawable/${limitImg}">`;
+                            break;
+                        case TYPE_DISABLED:
+                            html += `<img src="./drawable/level_nothing.png">`;
+                            break;
+                    }
+
+                    if (selected) html += `<img src="./drawable/highlight.png">`;
+
+                    html += `</div></td>`;
+                }
+                html += "</tr>";
+            }
+            html += "</table>";
+            document.getElementById("boardContainer").innerHTML = html;
+        }
+
+        function selectCell(r, c) {
+            selectedR = r;
+            selectedC = c;
+            renderBoard();
+        }
+
+        function setType(type) {
+            level[selectedR][selectedC].type = type;
+            if (type !== TYPE_EMPTY) level[selectedR][selectedC].preset_color = -1;
+            renderBoard();
+            saveLevel(); // auto-save
+        }
+
+        function setColor(color) {
+            level[selectedR][selectedC].dest_color = color;
+            renderBoard();
+            saveLevel(); // auto-save
+        }
+
+        function setPreset(color) {
+            if (level[selectedR][selectedC].type === TYPE_EMPTY) {
+                level[selectedR][selectedC].preset_color = color;
+                renderBoard();
+                saveLevel(); // auto-save
+            }
+        }
+
+        function setDirection(dir) {
+            level[selectedR][selectedC].direction = dir;
+            renderBoard();
+            saveLevel(); // auto-save
+        }
+
+        function showToolbox(tool) {
+            const items = document.querySelectorAll('.toolbox-item');
+            items.forEach(i => i.style.display = 'none');
+
+            if (tool === 'empty') document.querySelector('.toolbox-item-empty').style.display = 'block';
+            if (tool === 'flow') document.querySelector('.toolbox-item-flow').style.display = 'block';
+            if (tool === 'bomb') document.querySelector('.toolbox-item-bomb').style.display = 'block';
+            if (tool === 'limit') document.querySelector('.toolbox-item-limit').style.display = 'block';
+            // NOTHING has no extra toolbox
+        }
+
+        function getModifierChar(cell) {
+            switch (cell.type) {
+                case TYPE_EMPTY: return "0";        // empty cell
+                case TYPE_FLOW: return "F";        // flow
+                case TYPE_LIMIT:
+                    // encode direction for limits
+                    switch (cell.direction) {
+                        case "up": return "U";
+                        case "down": return "D";
+                        case "left": return "L";
+                        case "right": return "R";
+                        case "rotate_up": return "u";
+                        case "rotate_down": return "d";
+                        case "rotate_left": return "l";
+                        case "rotate_right": return "r";
+                    }
+                case TYPE_BOMB: return "B";        // bomb
+                case TYPE_DISABLED: return "0";     // nothing
+            }
+            return "0";
+        }
+
+        // Wrap in jQuery ready
+        $(document).ready(function () {
+
+            let previewXml = ""; // Store the XML preview
+
+            // Main submitLevel function: generate preview XML and show modal
+            function submitLevel() {
+                // Build preview XML (without username)
+                let colorStr = "";
+                let modifierStr = "";
+                for (let r = 0; r < ROWS; r++) {
+                    for (let c = 0; c < COLS; c++) {
+                        const cell = level[r][c];
+                        let color = (cell.preset_color && cell.preset_color !== -1) ? cell.preset_color : cell.dest_color;
+                        colorStr += COLOR_CODE[color] || "g";
+                        modifierStr += getModifierChar(cell);
+                    }
+                    if (r !== ROWS - 1) {
+                        colorStr += " ";
+                        modifierStr += " ";
+                    }
+                }
+
+                previewXml = `<level color="${colorStr}" modifier="${modifierStr}" />`;
+
+                // Display the preview in the modal
+                $("#xmlOutput").text(previewXml);
+
+                // Show modal
+                $('#submitLevelModal').modal('show');
+            }
+
+            // Handle the final submit: rebuild XML including username
+            $('#submitFinalBtn').off('click').on('click', function () {
+                const name = $("#submitName").val().trim();
+                const email = $("#submitEmail").val().trim();
+                const agreed = $("#agreeCheck").is(":checked");
+
+                if (!name) { alert("Name is required."); return; }
+                if (!agreed) { alert("You must agree to publish the level."); return; }
+
+                // Rebuild XML with username
+                const finalXml = previewXml.replace('<level', `<level username="${name}"`);
+
+                console.log("Submitting to backend...", { name, email, xml: finalXml });
+
+                // Send to Cloudflare Worker
+                fetch("https://borderbound.5646316.xyz", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name, email, xml: finalXml })
+                })
+                    .then(res => res.text())
+                    .then(msg => {
+                        alert("Worker response: " + msg);
+                        // Close modal
+                        $('#submitLevelModal').modal('hide');
+                    })
+                    .catch(err => {
+                        console.error("Error submitting to worker:", err);
+                        alert("Failed to submit level. Check console for details.");
+                    });
+            });
+
+            // Optional: focus submit button after modal is fully shown
+            $('#submitLevelModal').on('shown.bs.modal', function () {
+                $('#submitFinalBtn').focus();
+            });
+
+            // Expose submitLevel globally
+            window.submitLevel = submitLevel;
+        });
+
+
+
+        function clearLevel() {
+            console.log("Clearing level from localStorage...");
+            localStorage.removeItem("borderBoundLevel"); // replace with your localStorage key if different
+            // Optionally, also reset the current board
+            initLevel();
+            renderBoard();
+            alert("Level cleared from local storage!");
+        }
+
+        function saveLevel() {
+            localStorage.setItem("borderBoundLevel", JSON.stringify(level));
+            console.log("Level saved.");
+        }
+
+    </script>
+</body>
+
+</html>

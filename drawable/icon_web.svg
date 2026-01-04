@@ -1,0 +1,41 @@
+<svg height="1024" version="1.2" viewBox="0 0 1024 1024" width="1024" xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .s0 { fill: #cfcfcf }
+        .s1 { fill: #6fa8dc;stroke: #ffffff;stroke-width: 8 }
+        .s2 { fill: #6fa8dc }
+        .s3 { fill: none;stroke: #ffffff;stroke-linecap: round;stroke-linejoin: round;stroke-width: 10 }
+        .s4 { fill: #ffd966;stroke: #ffffff;stroke-width: 8 }
+        .s5 { fill: #ffd966 }
+        .s6 { fill: #e06666 }
+        .s7 { fill: #e06666;stroke: #ffffff;stroke-width: 8 }
+        .s8 { fill: #93c47d;stroke: #ffffff;stroke-width: 8 }
+        .s9 { fill: #93c47d }
+    </style>
+    <path class="s0" d="m0 0h1024v1024h-1024z" fill-rule="evenodd" id="Background" />
+    <g id="Blue">
+        <path class="s1" d="m120 120h120v120h-120z" fill-rule="evenodd" />
+        <path class="s1" d="m120 270h120v120h-120z" fill-rule="evenodd" />
+        <path class="s1" d="m120 420h120v120h-120z" fill-rule="evenodd" />
+        <path class="s1" d="m120 570h120v120h-120z" fill-rule="evenodd" />
+        <path class="s2" d="m120 720h120v120h-120z" fill-rule="evenodd" />
+        <path class="s3" d="m150 790l30-40 30 40" fill-rule="evenodd" />
+    </g>
+    <g id="Yellow">
+        <path class="s4" d="m420 120h120v120h-120z" fill-rule="evenodd" />
+        <path class="s4" d="m570 120h120v120h-120z" fill-rule="evenodd" />
+        <path class="s5" d="m720 120h120v120h-120z" fill-rule="evenodd" />
+        <path class="s3" d="m790 150l-40 30 40 30" fill-rule="evenodd" />
+    </g>
+    <g id="Red">
+        <path class="s6" d="m460 420h120v120h-120z" fill-rule="evenodd" />
+        <path class="s7" d="m460 570h120v120h-120z" fill-rule="evenodd" />
+        <path class="s7" d="m460 720h120v120h-120z" fill-rule="evenodd" />
+        <path class="s3" d="m490 450l30 40 30-40" fill-rule="evenodd" />
+    </g>
+    <g id="Green">
+        <path class="s8" d="m720 420h120v120h-120z" fill-rule="evenodd" />
+        <path class="s8" d="m720 570h120v120h-120z" fill-rule="evenodd" />
+        <path class="s9" d="m720 720h120v120h-120z" fill-rule="evenodd" />
+        <path class="s3" d="m750 790l30-40 30 40" fill-rule="evenodd" />
+    </g>
+</svg>
