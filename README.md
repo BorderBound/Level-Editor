@@ -1,4 +1,4 @@
-# BorderBound level editor
+# BorderBound Level Editor
 
 <img src="screenshot.png" width="300" />
 
