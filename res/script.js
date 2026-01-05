@@ -73,6 +73,7 @@ function loadLevel() {
 	} else {
 		initLevel();
 	}
+	updateBoardHeader();
 }
 
 // On page load
@@ -229,6 +230,10 @@ function getModifierChar(cell) {
 	return "0";
 }
 
+function updateBoardHeader() {
+	document.getElementById("boardHeader").textContent = `Game board (${COLS}×${ROWS})`;
+}
+
 // Wrap in jQuery ready
 $(document).ready(function () {
 	let previewXml = ""; // Store the XML preview
@@ -344,6 +349,7 @@ function showEditor() {
 
 function startNewLevel(rows = 6, cols = 5) {
 	initLevel(rows, cols);
+	updateBoardHeader();
 	saveLevel();
 	showEditor();
 	renderBoard();
