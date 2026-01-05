@@ -1,5 +1,5 @@
 // =========================
-// CONSTANTS
+// CONSTANTS & GLOBAL VARIABLES
 // =========================
 
 // Cell types
@@ -26,7 +26,6 @@ const COLOR_MAP = {
 };
 
 // Short codes for XML export
-// These are compact representations used in level submission
 const COLOR_CODE = {
 	1: "r", // red
 	2: "g", // green
@@ -34,10 +33,6 @@ const COLOR_CODE = {
 	4: "y", // yellow
 	5: "k", // black
 };
-
-// =========================
-// GLOBAL VARIABLES
-// =========================
 
 // Board dimensions
 let ROWS = 6; // Default number of rows
@@ -55,7 +50,6 @@ let selectedC = 0;
 // =========================
 
 // Create a fresh board or resize the current one
-// Each cell is initialized with default properties
 function initLevel(rows = ROWS, cols = COLS) {
 	ROWS = rows;
 	COLS = cols;
@@ -75,12 +69,20 @@ function initLevel(rows = ROWS, cols = COLS) {
 	}
 }
 
+// Start a new level with optional custom dimensions
+function startNewLevel(rows = 6, cols = 5) {
+	initLevel(rows, cols);
+	updateBoardHeader();
+	saveLevel();
+	showEditor();
+	renderBoard();
+}
+
 // =========================
 // LOAD / SAVE LEVEL
 // =========================
 
 // Load level from localStorage if it exists; otherwise, initialize a new one
-// Robust error handling ensures corrupted data does not break the editor
 function loadLevel() {
 	const saved = localStorage.getItem("borderBoundLevel");
 	if (saved) {
@@ -104,14 +106,12 @@ function loadLevel() {
 }
 
 // Persist current level to localStorage
-// Useful for autosave or manual save functionality
 function saveLevel() {
 	localStorage.setItem("borderBoundLevel", JSON.stringify(level));
 	console.log("Level saved.");
 }
 
 // Clear localStorage and reset the board
-// Reloads the page to ensure all references are reset
 function clearLevel() {
 	console.log("Clearing level from localStorage...");
 	localStorage.removeItem("borderBoundLevel");
@@ -125,7 +125,6 @@ function clearLevel() {
 // =========================
 
 // Render the level editor as an HTML table
-// Dynamically generates each cell based on its type and state
 function renderBoard() {
 	let html = `<table class="mx-auto">`;
 	for (let r = 0; r < ROWS; r++) {
@@ -139,9 +138,7 @@ function renderBoard() {
 			// Render cell based on type
 			switch (cell.type) {
 				case TYPE_EMPTY:
-					// Background is the target color
 					html += `<img src="./drawable/level_box_dest_color_${COLOR_MAP[cell.dest_color]}.png">`;
-					// Optionally overlay a prefilled stone
 					if (cell.preset_color && cell.preset_color !== -1) {
 						html += `<img src="./drawable/level_box_stone_${COLOR_MAP[cell.preset_color]}.png">`;
 					}
@@ -156,7 +153,6 @@ function renderBoard() {
 					break;
 				case TYPE_LIMIT:
 					html += `<img src="./drawable/level_box_color_${COLOR_MAP[cell.dest_color]}.png">`;
-					// Use a different image depending on LIMIT direction
 					let limitImg = `level_box_type_limit_${cell.direction}.png`;
 					html += `<img src="./drawable/${limitImg}">`;
 					break;
@@ -176,6 +172,11 @@ function renderBoard() {
 	document.getElementById("boardContainer").innerHTML = html;
 }
 
+// Update header text to display current grid size
+function updateBoardHeader() {
+	document.getElementById("boardHeader").textContent = `Game board (${COLS}×${ROWS})`;
+}
+
 // =========================
 // CELL SELECTION & EDITING
 // =========================
@@ -188,7 +189,6 @@ function selectCell(r, c) {
 }
 
 // Change type of selected cell
-// Clearing preset_color for non-empty tiles avoids accidental overlays
 function setType(type) {
 	level[selectedR][selectedC].type = type;
 	if (type !== TYPE_EMPTY) level[selectedR][selectedC].preset_color = -1;
@@ -197,7 +197,6 @@ function setType(type) {
 }
 
 // Set destination color of selected cell
-// This color often represents the 'goal' color for the tile
 function setColor(color) {
 	level[selectedR][selectedC].dest_color = color;
 	renderBoard();
@@ -205,7 +204,6 @@ function setColor(color) {
 }
 
 // Set prefilled stone color for EMPTY cells
-// Only allowed if the cell is empty
 function setPreset(color) {
 	if (level[selectedR][selectedC].type === TYPE_EMPTY) {
 		level[selectedR][selectedC].preset_color = color;
@@ -215,7 +213,6 @@ function setPreset(color) {
 }
 
 // Set direction for LIMIT tiles
-// Handles special rotations and movement restrictions
 function setDirection(dir) {
 	level[selectedR][selectedC].direction = dir;
 	renderBoard();
@@ -225,7 +222,7 @@ function setDirection(dir) {
 // Show/hide toolbox controls depending on selected type
 function showToolbox(tool) {
 	const items = document.querySelectorAll(".toolbox-item");
-	items.forEach((i) => (i.style.display = "none")); // hide all
+	items.forEach((i) => (i.style.display = "none"));
 
 	switch (tool) {
 		case "empty":
@@ -251,11 +248,10 @@ function showToolbox(tool) {
 function getModifierChar(cell) {
 	switch (cell.type) {
 		case TYPE_EMPTY:
-			return "0"; // empty tile
+			return "0";
 		case TYPE_FLOW:
-			return "F"; // flow tile
+			return "F";
 		case TYPE_LIMIT:
-			// Encode direction for limit tile
 			const mapping = {
 				up: "U",
 				down: "D",
@@ -272,16 +268,11 @@ function getModifierChar(cell) {
 		case TYPE_DISABLED:
 			return "0";
 	}
-	return "0"; // fallback
-}
-
-// Update header text to display current grid size
-function updateBoardHeader() {
-	document.getElementById("boardHeader").textContent = `Game board (${COLS}×${ROWS})`;
+	return "0";
 }
 
 // =========================
-// SUBMIT LEVEL MODAL LOGIC
+// SUBMIT LEVEL LOGIC (MODAL & XML)
 // =========================
 $(document).ready(function () {
 	let previewXml = "";
@@ -292,13 +283,11 @@ $(document).ready(function () {
 		for (let r = 0; r < ROWS; r++) {
 			for (let c = 0; c < COLS; c++) {
 				const cell = level[r][c];
-				// Use preset_color if defined, otherwise dest_color
 				let color = cell.preset_color && cell.preset_color !== -1 ? cell.preset_color : cell.dest_color;
 				colorStr += COLOR_CODE[color] || "g";
 				modifierStr += getModifierChar(cell);
 			}
 			if (r !== ROWS - 1) {
-				// space between rows
 				colorStr += " ";
 				modifierStr += " ";
 			}
@@ -328,7 +317,6 @@ $(document).ready(function () {
 			const finalXml = previewXml.replace("<level", `<level username="${name}"`);
 			console.log("Submitting to backend...", { name, email, xml: finalXml });
 
-			// Send level XML to backend API for storage/publishing
 			fetch("https://borderbound.5646316.xyz", {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
@@ -353,29 +341,30 @@ $(document).ready(function () {
 // =========================
 // PAGE DISPLAY LOGIC
 // =========================
-document.addEventListener("DOMContentLoaded", () => {
-	const saved = localStorage.getItem("borderBoundLevel");
-	if (saved) showEditor();
-	else showLanding();
-});
 
+// Show landing page when no level is loaded
 function showLanding() {
 	document.getElementById("landingPage").style.display = "block";
 	document.getElementById("editorApp").style.display = "none";
 }
 
+// Show editor when level is loaded or started
 function showEditor() {
 	document.getElementById("landingPage").style.display = "none";
 	document.getElementById("editorApp").style.display = "block";
 }
 
-// =========================
-// START NEW LEVEL
-// =========================
-function startNewLevel(rows = 6, cols = 5) {
-	initLevel(rows, cols);
-	updateBoardHeader();
-	saveLevel();
-	showEditor();
-	renderBoard();
-}
+// Decide which view to show on page load
+document.addEventListener("DOMContentLoaded", () => {
+	// Load level from localStorage or initialize new one
+	loadLevel();
+
+	// Determine which view to display
+	const saved = localStorage.getItem("borderBoundLevel");
+	if (saved) {
+		showEditor();
+		renderBoard(); // <-- render the saved level
+	} else {
+		showLanding();
+	}
+});
