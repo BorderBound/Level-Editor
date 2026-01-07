@@ -384,7 +384,24 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================
 // TOAST NOTIFICATIONS
 // =========================
+const toastQueue = [];
+let toastShowing = false;
+
 function showToast(message, type = "info", duration = 3000) {
+	toastQueue.push({ message, type, duration });
+	if (!toastShowing) processToastQueue();
+}
+
+function processToastQueue() {
+	if (toastQueue.length === 0) {
+		toastShowing = false;
+		return;
+	}
+
+	toastShowing = true;
+
+	const { message, type, duration } = toastQueue.shift();
+
 	const toastEl = document.getElementById("appToast");
 	const toastBody = document.getElementById("appToastBody");
 	const toastIcon = document.getElementById("toastIcon");
@@ -416,6 +433,11 @@ function showToast(message, type = "info", duration = 3000) {
 	}
 
 	// Initialize and show Bootstrap toast
-	const bsToast = new bootstrap.Toast(toastEl, { delay: duration });
+	const bsToast = bootstrap.Toast.getOrCreateInstance(toastEl, {
+		delay: duration,
+	});
+
+	toastEl.addEventListener("hidden.bs.toast", () => processToastQueue(), { once: true });
+
 	bsToast.show();
 }
