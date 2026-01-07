@@ -272,18 +272,20 @@ function getModifierChar(cell) {
 }
 
 // =========================
-// SUBMIT LEVEL LOGIC (MODAL & XML)
+// SUBMIT LEVEL (JSON + TOAST)
 // =========================
+
 $(document).ready(function () {
-	let previewXml = "";
+	let previewData = {};
 
 	function submitLevel() {
 		let colorStr = "";
 		let modifierStr = "";
+
 		for (let r = 0; r < ROWS; r++) {
 			for (let c = 0; c < COLS; c++) {
 				const cell = level[r][c];
-				let color = cell.preset_color && cell.preset_color !== -1 ? cell.preset_color : cell.dest_color;
+				const color = cell.preset_color !== -1 ? cell.preset_color : cell.dest_color;
 				colorStr += COLOR_CODE[color] || "g";
 				modifierStr += getModifierChar(cell);
 			}
@@ -293,78 +295,88 @@ $(document).ready(function () {
 			}
 		}
 
-		previewXml = `<level color="${colorStr}" modifier="${modifierStr}" />`;
-		$("#xmlOutput").text(previewXml);
+		previewData = { color: colorStr, modifier: modifierStr };
+		$("#xmlOutput").text(JSON.stringify(previewData, null, 2));
 		$("#submitLevelModal").modal("show");
 	}
 
-	$("#submitFinalBtn")
-		.off("click")
-		.on("click", function () {
-			const name = $("#submitName").val().trim();
-			const email = $("#submitEmail").val().trim();
-			const agreed = $("#agreeCheck").is(":checked");
+	$("#submitFinalBtn").on("click", function () {
+		const name = $("#submitName").val().trim();
+		const email = $("#submitEmail").val().trim();
+		const agreed = $("#agreeCheck").is(":checked");
 
-			if (!name) {
-				alert("Name is required.");
-				return;
-			}
-			if (!agreed) {
-				alert("You must agree to publish the level.");
-				return;
-			}
+		if (!name) return showToast("Name is required.", "warning");
+		if (!agreed) return showToast("You must agree to publish.", "warning");
 
-			const finalXml = previewXml.replace("<level", `<level username="${name}"`);
-			console.log("Submitting to backend...", { name, email, xml: finalXml });
+		const payload = { name, email, ...previewData };
 
-			fetch("https://borderbound.5646316.xyz", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ name, email, xml: finalXml }),
+		fetch("https://borderbound.5646316.xyz", {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(payload),
+		})
+			.then(async (res) => {
+				const data = await res.json();
+				if (!res.ok) throw new Error(data.message || "Submission failed");
+				return data;
 			})
-				.then((res) => res.text())
-				.then(() => {
-					$("#submitLevelModal").modal("hide");
-				})
-				.catch((err) => {
-					console.error("Error submitting to worker:", err);
-					alert("Failed to submit level.");
-				});
-		});
-
-	$("#submitLevelModal").on("shown.bs.modal", function () {
-		$("#submitFinalBtn").focus();
+			.then((data) => {
+				showToast(data.message || "Level submitted!", "success");
+				$("#submitLevelModal").modal("hide");
+			})
+			.catch((err) => {
+				showToast(err.message || "Failed to submit level.", "danger");
+			});
 	});
+
 	window.submitLevel = submitLevel;
 });
 
 // =========================
-// PAGE DISPLAY LOGIC
+// PAGE DISPLAY
 // =========================
 
-// Show landing page when no level is loaded
 function showLanding() {
 	document.getElementById("landingPage").style.display = "block";
 	document.getElementById("editorApp").style.display = "none";
 }
 
-// Show editor when level is loaded or started
 function showEditor() {
 	document.getElementById("landingPage").style.display = "none";
 	document.getElementById("editorApp").style.display = "block";
 }
 
-// Decide which view to show on page load
 document.addEventListener("DOMContentLoaded", () => {
-	// Load level from localStorage or initialize new one
 	loadLevel();
+	localStorage.getItem("borderBoundLevel") ? (showEditor(), renderBoard()) : showLanding();
+});
 
-	// Determine which view to display
-	const saved = localStorage.getItem("borderBoundLevel");
-	if (saved) {
-		showEditor();
-		renderBoard(); // <-- render the saved level
+// ============================
+// THEME TOGGLE (Dark / Light)
+// ============================
+
+function applyTheme(theme) {
+	if (theme === "dark") {
+		document.body.classList.add("dark-mode");
+		document.body.classList.remove("light-mode");
+		document.getElementById("themeToggle").textContent = "☀️"; // switch icon to sun
 	} else {
-		showLanding();
+		document.body.classList.add("light-mode");
+		document.body.classList.remove("dark-mode");
+		document.getElementById("themeToggle").textContent = "🌙"; // switch icon to moon
 	}
+}
+
+// Load theme from localStorage on page load
+document.addEventListener("DOMContentLoaded", () => {
+	let savedTheme = localStorage.getItem("themeMode") || "light";
+	applyTheme(savedTheme);
+
+	// Toggle button click handler
+	document.getElementById("themeToggle").addEventListener("click", () => {
+		let currentTheme = document.body.classList.contains("dark-mode") ? "dark" : "light";
+		let newTheme = currentTheme === "dark" ? "light" : "dark";
+		applyTheme(newTheme);
+		localStorage.setItem("themeMode", newTheme);
+	});
 });

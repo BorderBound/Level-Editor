@@ -4,106 +4,75 @@
 <head>
     <meta charset="UTF-8">
     <title>BorderBound Level Editor</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="drawable/icon_web.svg">
 
-    <link rel="stylesheet" href="res/bootstrap-4.3.1.min.css">
-    <!-- jQuery 3.1.1 -->
-    <script src="res/jquery-3.1.1.min.js"></script>
-    <!-- Popper.js (required for Bootstrap JS) -->
+    <!-- Bootstrap CSS (local) -->
+    <link rel="stylesheet" href="res/bootstrap.min.css">
+
+    <!-- Custom Dark Mode + Layout -->
+    <link rel="stylesheet" href="res/custom.css">
+
+    <!-- jQuery + Popper + Bootstrap JS (local) -->
+    <script src="res/jquery.min.js"></script>
     <script src="res/popper.min.js"></script>
-    <!-- Bootstrap JS (requires Popper) -->
-    <script src="res/bootstrap-4.3.1.min.js"></script>
-
-    <style>
-        body {
-            user-select: none;
-        }
-
-        .field {
-            position: relative;
-            width: 70px;
-            height: 70px;
-            cursor: pointer;
-        }
-
-        .field img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 70px;
-            height: 70px;
-        }
-
-        table {
-            border-collapse: collapse;
-        }
-
-        td {
-            padding: 2px;
-        }
-
-        .toolbox-item {
-            display: none;
-        }
-
-        .toolbox-item.toolbox-item-empty {
-            display: block;
-        }
-    </style>
+    <script src="res/bootstrap.min.js"></script>
+    <script src="res/bootstrap.bundle.min.js"></script>
 </head>
 
 <body>
+    <!-- Toast container -->
+    <div id="toastRoot" class="position-fixed top-0 end-0 p-3" style="z-index: 10000;">
+        <div id="appToast" class="toast align-items-center border-0" role="alert" aria-live="assertive"
+            aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-center gap-2">
+                    <span id="toastIcon">✔</span>
+                    <span id="appToastBody"></span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
 
     <!-- NAVBAR -->
-    <div class="navbar navbar-light bg-light d-flex justify-content-between align-items-center">
-        <!-- Left side -->
-        <div class="d-flex align-items-center">
-            <h1 class="navbar-brand mb-0">
-                <img src="drawable/icon_web.svg" width="30" height="30">
-                BorderBound! Level Editor
-            </h1>
-        </div>
+    <nav class="navbar px-3 theme-aware-navbar">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
+            <!-- Left: Brand + Theme Toggle -->
+            <div class="d-flex align-items-center">
+                <a class="navbar-brand d-flex align-items-center mb-0" href="#">
+                    <img src="drawable/icon_web.svg" width="30" height="30" class="me-2">
+                    <span class="fs-6 fw-bold">BorderBound! Level Editor</span>
+                </a>
+                <!-- Theme icon -->
+                <span id="themeToggle" class="theme-icon ms-3">🌙</span>
+            </div>
 
-        <!-- Right side -->
-        <div>
-            <button class="btn btn-sm btn-success mr-1" onclick="submitLevel()">Submit</button>
-            <button class="btn btn-sm btn-danger" onclick="clearLevel()">Clear</button>
+            <!-- Right: Action Buttons -->
+            <div class="d-flex align-items-center">
+                <button class="btn btn-sm btn-success me-2" onclick="submitLevel()">Submit</button>
+                <button class="btn btn-sm btn-danger" onclick="clearLevel()">Clear</button>
+            </div>
         </div>
-    </div>
+    </nav>
+
+
 
     <!-- LANDING PAGE -->
-    <div id="landingPage" class="container text-center p-5" style="display:none;">
-        <h1 class="mb-4">
-            BorderBound Level Editor
-        </h1>
+    <div id="landingPage" class="container text-center py-5" style="display:none;">
+        <h1 class="mb-3 fw-bold">BorderBound Level Editor</h1>
+        <p class="lead mb-4 text-muted">Create and share custom levels for BorderBound!</p>
 
-        <p class="lead mb-4">
-            Create and share custom levels for BorderBound!
-        </p>
-
-        <div class="d-flex flex-column align-items-center">
-            <button class="btn btn-dark btn-lg mb-3" onclick="startNewLevel(6,5)">
-                Create New Small Level
-            </button>
-
-            <button class="btn btn-warning btn-lg mb-3" onclick="startNewLevel(7,6)">
-                Create New Medium Level
-            </button>
-
-            <button class="btn btn-info btn-lg mb-3" onclick="startNewLevel(8,6)">
-                Create New Large Level
-            </button>
+        <div class="d-grid gap-3 col-12 col-md-6 mx-auto">
+            <button class="btn btn-dark btn-lg" onclick="startNewLevel(6,5)">Create New Small Level</button>
+            <button class="btn btn-warning btn-lg" onclick="startNewLevel(7,6)">Create New Medium Level</button>
+            <button class="btn btn-info btn-lg" onclick="startNewLevel(8,6)">Create New Large Level</button>
         </div>
     </div>
-
-
 
     <!-- EDITOR APP -->
     <div id="editorApp" style="display:none;">
-
-        <!-- MAIN -->
         <div class="container p-3">
             <div class="row">
                 <!-- BOARD -->
@@ -204,7 +173,8 @@
                                     <td>
                                         <div class="field" onclick="setPreset(COLOR_GREEN)"><img
                                                 src="./drawable/level_box_hole.png"><img
-                                                src="./drawable/level_box_stone_green.png"></div>
+                                                src="./drawable/level_box_stone_green.png">
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="field" onclick="setPreset(COLOR_BLUE)"><img
@@ -214,12 +184,14 @@
                                     <td>
                                         <div class="field" onclick="setPreset(COLOR_YELLOW)"><img
                                                 src="./drawable/level_box_hole.png"><img
-                                                src="./drawable/level_box_stone_yellow.png"></div>
+                                                src="./drawable/level_box_stone_yellow.png">
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="field" onclick="setPreset(COLOR_BLACK)"><img
                                                 src="./drawable/level_box_hole.png"><img
-                                                src="./drawable/level_box_stone_black.png"></div>
+                                                src="./drawable/level_box_stone_black.png">
+                                        </div>
                                     </td>
                                 </tr>
                             </table>
@@ -233,7 +205,8 @@
                                     <td>
                                         <div class="field" onclick="setColor(COLOR_RED)"><img
                                                 src="./drawable/level_box_color_red.png"><img
-                                                src="./drawable/level_box_type_flow.png"></div>
+                                                src="./drawable/level_box_type_flow.png">
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="field" onclick="setColor(COLOR_GREEN)"><img
@@ -243,7 +216,8 @@
                                     <td>
                                         <div class="field" onclick="setColor(COLOR_BLUE)"><img
                                                 src="./drawable/level_box_color_blue.png"><img
-                                                src="./drawable/level_box_type_flow.png"></div>
+                                                src="./drawable/level_box_type_flow.png">
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="field" onclick="setColor(COLOR_YELLOW)"><img
@@ -267,7 +241,8 @@
                                     <td>
                                         <div class="field" onclick="setColor(COLOR_RED)"><img
                                                 src="./drawable/level_box_color_red.png"><img
-                                                src="./drawable/level_box_type_bomb.png"></div>
+                                                src="./drawable/level_box_type_bomb.png">
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="field" onclick="setColor(COLOR_GREEN)"><img
@@ -277,7 +252,8 @@
                                     <td>
                                         <div class="field" onclick="setColor(COLOR_BLUE)"><img
                                                 src="./drawable/level_box_color_blue.png"><img
-                                                src="./drawable/level_box_type_bomb.png"></div>
+                                                src="./drawable/level_box_type_bomb.png">
+                                        </div>
                                     </td>
                                     <td>
                                         <div class="field" onclick="setColor(COLOR_YELLOW)"><img
@@ -376,49 +352,47 @@
 
                     </div>
                 </div>
-
             </div>
 
-            <!-- Modal HTML (place at the end of <body>) -->
+            <!-- Modal -->
             <div class="modal fade" id="submitLevelModal" tabindex="-1" role="dialog"
                 aria-labelledby="submitLevelModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document"> <!-- centered -->
+                <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="submitLevelModalLabel">Submit Your Level</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="submitName">Your name (required)</label>
                                 <input type="text" class="form-control" id="submitName">
                             </div>
 
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <label for="submitEmail">Your email (optional)</label>
                                 <input type="email" class="form-control" id="submitEmail">
                             </div>
 
-                            <p>Your level XML:</p>
-                            <pre id="xmlOutput" style="background:#f7f7f7; padding:10px;"></pre>
+                            <p>Your level JSON:</p>
+                            <pre id="xmlOutput" class="json-output"></pre>
 
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="agreeCheck">
                                 <label class="form-check-label" for="agreeCheck">
                                     I agree that my level will be included in BorderBound under GPL-3 license.
-                                    (required)
                                 </label>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-primary" id="submitFinalBtn">Submit</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 

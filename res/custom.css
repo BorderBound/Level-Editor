@@ -1,0 +1,119 @@
+/* ------------------ THEME VARIABLES ------------------ */
+body.dark-mode {
+    --bg-color: #121212;
+    --card-color: #1f1f1f;
+    --text-color: #eee;
+    --btn-info-warning-color: #000;
+    --board-bg: #1a1a1a;
+}
+
+body.light-mode {
+    --bg-color: #f8f9fa;
+    --card-color: #fff;
+    --text-color: #000;
+    --btn-info-warning-color: #000;
+    --board-bg: #e9ecef;
+}
+
+/* ------------------ GENERAL STYLES ------------------ */
+body {
+    user-select: none;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.navbar,
+.card,
+.modal-content {
+    background-color: var(--card-color);
+    color: var(--text-color);
+}
+
+.btn-dark,
+.btn-success,
+.btn-warning,
+.btn-info,
+.btn-danger {
+    font-weight: bold;
+}
+
+.btn-warning,
+.btn-info {
+    color: var(--btn-info-warning-color) !important;
+}
+
+/* Board fields */
+.field {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    cursor: pointer;
+}
+
+.field img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 70px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    padding: 2px;
+}
+
+.toolbox-item {
+    display: none;
+}
+
+.toolbox-item.toolbox-item-empty {
+    display: block;
+}
+
+/* Board container background */
+#boardContainer {
+    background-color: var(--board-bg);
+}
+
+/* ------------------ TOAST STYLES ------------------ */
+.toast-success {
+    background-color: #198754;
+    color: #fff;
+}
+
+.toast-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.toast-warning {
+    background-color: #ffc107;
+    color: #000;
+}
+
+.toast-info {
+    background-color: #0dcaf0;
+    color: #000;
+}
+
+/* ------------------ NAVBAR THEME ------------------ */
+.theme-aware-navbar {
+    background-color: var(--card-color);
+    color: var(--text-color);
+}
+
+.theme-aware-navbar .navbar-brand,
+.theme-aware-navbar .navbar-brand span {
+    color: var(--text-color);
+}
+
+.theme-icon {
+    cursor: pointer;
+    font-size: 1.25rem;
+    /* adjust size */
+    user-select: none;
+}
