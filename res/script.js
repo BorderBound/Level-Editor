@@ -380,3 +380,42 @@ document.addEventListener("DOMContentLoaded", () => {
 		localStorage.setItem("themeMode", newTheme);
 	});
 });
+
+// ==========================
+// TOAST NOTIFICATIONS
+// =========================
+function showToast(message, type = "info", duration = 3000) {
+	const toastEl = document.getElementById("appToast");
+	const toastBody = document.getElementById("appToastBody");
+	const toastIcon = document.getElementById("toastIcon");
+
+	// Set message
+	toastBody.textContent = message;
+
+	// Reset toast classes
+	toastEl.classList.remove("toast-success", "toast-info", "toast-warning", "toast-danger");
+
+	// Apply type class and icon
+	switch (type) {
+		case "success":
+			toastEl.classList.add("toast-success");
+			toastIcon.textContent = "✔";
+			break;
+		case "danger":
+			toastEl.classList.add("toast-danger");
+			toastIcon.textContent = "❌";
+			break;
+		case "warning":
+			toastEl.classList.add("toast-warning");
+			toastIcon.textContent = "⚠️";
+			break;
+		default:
+			toastEl.classList.add("toast-info");
+			toastIcon.textContent = "ℹ️";
+			break;
+	}
+
+	// Initialize and show Bootstrap toast
+	const bsToast = new bootstrap.Toast(toastEl, { delay: duration });
+	bsToast.show();
+}
