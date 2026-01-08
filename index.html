@@ -61,14 +61,20 @@
 
     <!-- LANDING PAGE -->
     <div id="landingPage" class="container text-center py-5" style="display:none;">
-        <h1 class="mb-3 fw-bold">BorderBound Level Editor</h1>
-        <p class="lead mb-4 text-muted">Create and share custom levels for BorderBound!</p>
+        <div class="intro-container">
+            <h1>BorderBound Level Creator</h1>
+            <p>Create and share custom levels for BorderBound!</p>
 
-        <div class="d-grid gap-3 col-12 col-md-6 mx-auto">
-            <button class="btn btn-dark btn-lg" onclick="startNewLevel(6,5)">Create New Small Level</button>
-            <button class="btn btn-warning btn-lg" onclick="startNewLevel(7,6)">Create New Medium Level</button>
-            <button class="btn btn-info btn-lg" onclick="startNewLevel(8,6)">Create New Large Level</button>
+            <div class="d-grid gap-3 col-12 col-md-6 mx-auto">
+                <button class="btn btn-dark btn-lg" onclick="startNewLevel(6,5)">Create 6x5 Level</button>
+                <button class="btn btn-secondary btn-lg" onclick="startNewLevel(6,6)">Create 6x6 Level</button>
+                <button class="btn btn-warning btn-lg" onclick="startNewLevel(7,5)">Create 7x5 Level</button>
+                <button class="btn btn-info btn-lg" onclick="startNewLevel(7,6)">Create 7x6 Level</button>
+                <button class="btn btn-success btn-lg" onclick="startNewLevel(8,5)">Create 8x5 Level</button>
+                <button class="btn btn-danger btn-lg" onclick="startNewLevel(8,6)">Create 8x6 Level</button>
+            </div>
         </div>
+
     </div>
 
     <!-- EDITOR APP -->

@@ -42,6 +42,7 @@ body {
     color: var(--btn-info-warning-color) !important;
 }
 
+/* ------------------ BOARD STYLES ------------------ */
 /* Board fields */
 .field {
     position: relative;
@@ -66,6 +67,7 @@ td {
     padding: 2px;
 }
 
+/* Toolbox */
 .toolbox-item {
     display: none;
 }
@@ -116,4 +118,70 @@ td {
     font-size: 1.25rem;
     /* adjust size */
     user-select: none;
+}
+
+/* ------------------ INTRO SECTION ------------------ */
+.intro-container {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.intro-container h1 {
+    color: var(--text-color);
+    /* adapts to dark/light mode */
+    font-weight: bold;
+}
+
+.intro-container p {
+    color: var(--text-color);
+    /* same for paragraph */
+    opacity: 0.7;
+    /* slightly muted like Bootstrap lead */
+    margin-bottom: 1.5rem;
+}
+
+/* ------------------ THEMED BUTTONS ------------------ */
+.intro-container .btn-dark {
+    background-color: #212529;
+    /* can stay dark for contrast */
+    color: #fff;
+}
+
+.intro-container .btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.intro-container .btn-warning {
+    background-color: #ffc107;
+    color: var(--btn-info-warning-color);
+    /* adapts to theme */
+}
+
+.intro-container .btn-info {
+    background-color: #0dcaf0;
+    color: var(--btn-info-warning-color);
+    /* adapts to theme */
+}
+
+.intro-container .btn-success {
+    background-color: #198754;
+    color: #fff;
+}
+
+.intro-container .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+/* Hover effect for all buttons */
+.intro-container .btn:hover {
+    filter: brightness(1.1);
+}
+
+/* Ensure warning/info text adapts in dark mode */
+body.dark-mode .intro-container .btn-warning,
+body.dark-mode .intro-container .btn-info {
+    color: #000;
+    /* matches --btn-info-warning-color in dark mode */
 }
