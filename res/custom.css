@@ -1,4 +1,76 @@
-/* ------------------ THEME VARIABLES ------------------ */
+/* ------------------ YOUR ORIGINAL CSS ------------------ */
+textarea {
+    font-family: monospace;
+    text-align: left;
+}
+
+.field {
+    position: relative;
+    display: block;
+    width: 70px;
+    height: 70px;
+}
+
+.field > img {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 70px;
+    height: 70px;
+}
+
+#board td, .editor td {
+    width: 70px;
+    height: 70px;
+}
+
+#board a, .editor a {
+    opacity: 1;
+    transition:opacity 100ms ease-out;
+    display: block;
+    width: 70px;
+    height: 70px;
+}
+
+#board a:hover, .editor a:hover {
+    opacity: 0.4;
+}
+
+.editor {
+    min-height: 400px;
+}
+
+.card {
+    min-width: 400px;
+}
+
+@media screen and (max-width: 500px) {
+    .field > img {
+        width: 50px;
+        height: 50px;
+    }
+
+    #board td, .editor td {
+        width: 50px;
+        height: 50px;
+    }
+
+    .card {
+        min-width: 300px;
+    }
+}
+
+.screen-size-warning {
+    display: none;
+}
+
+@media screen and (max-width: 1000px) {
+    .screen-size-warning {
+        display: block;
+    }
+}
+
+/* ------------------ DARK/LIGHT THEME VARIABLES ------------------ */
 body.dark-mode {
     --bg-color: #121212;
     --card-color: #1f1f1f;
@@ -15,7 +87,16 @@ body.light-mode {
     --board-bg: #e9ecef;
 }
 
-/* ------------------ GENERAL STYLES ------------------ */
+/* ------------------ NAVBAR BRAND THEME ------------------ */
+.theme-aware-navbar .navbar-brand,
+.theme-aware-navbar .navbar-brand span,
+.theme-aware-navbar .navbar-brand img {
+    color: var(--text-color);
+    filter: var(--navbar-img-filter, none);
+}
+
+
+/* ------------------ GENERAL THEME STYLES ------------------ */
 body {
     user-select: none;
     background-color: var(--bg-color);
@@ -42,136 +123,12 @@ body {
     color: var(--btn-info-warning-color) !important;
 }
 
-/* ------------------ BOARD STYLES ------------------ */
-.field {
-    position: relative;
-    width: 70px;
-    height: 70px;
-    cursor: pointer;
-}
-
-.field img {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 70px;
-    height: 70px;
-}
-
-table {
-    border-collapse: collapse;
-}
-
-td {
-    padding: 2px;
-}
-
-/* Toolbox */
-.toolbox-item {
-    display: none;
-}
-
-.toolbox-item.toolbox-item-empty {
-    display: block;
-}
-
-/* Board container background */
+/* Board background */
 #boardContainer {
     background-color: var(--board-bg);
 }
 
-/* ------------------ TOAST STYLES ------------------ */
-.toast-success {
-    background-color: #198754;
-    color: #fff;
-}
-
-.toast-danger {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-.toast-warning {
-    background-color: #ffc107;
-    color: #000;
-}
-
-.toast-info {
-    background-color: #0dcaf0;
-    color: #000;
-}
-
-/* ------------------ NAVBAR THEME ------------------ */
-.theme-aware-navbar {
-    background-color: var(--card-color);
-    color: var(--text-color);
-}
-
-.theme-aware-navbar .navbar-brand,
-.theme-aware-navbar .navbar-brand span {
-    color: var(--text-color);
-}
-
-.theme-icon {
-    cursor: pointer;
-    font-size: 1.25rem;
-    user-select: none;
-}
-
-/* ------------------ INTRO SECTION ------------------ */
-.intro-container {
-    text-align: center;
-    padding: 3rem 1rem;
-}
-
-.intro-container h1 {
-    color: var(--text-color);
-    font-weight: bold;
-}
-
-.intro-container p {
-    color: var(--text-color);
-    opacity: 0.7;
-    margin-bottom: 1.5rem;
-}
-
-/* ------------------ THEMED BUTTONS ------------------ */
-.intro-container .btn-dark {
-    background-color: #212529;
-    color: #fff;
-}
-
-.intro-container .btn-secondary {
-    background-color: #6c757d;
-    color: #fff;
-}
-
-.intro-container .btn-warning {
-    background-color: #ffc107;
-    color: var(--btn-info-warning-color);
-}
-
-.intro-container .btn-info {
-    background-color: #0dcaf0;
-    color: var(--btn-info-warning-color);
-}
-
-.intro-container .btn-success {
-    background-color: #198754;
-    color: #fff;
-}
-
-.intro-container .btn-danger {
-    background-color: #dc3545;
-    color: #fff;
-}
-
-/* Hover effect for all buttons */
-.intro-container .btn:hover {
-    filter: brightness(1.1);
-}
-
-/* Ensure warning/info text adapts in dark mode */
+/* Intro container buttons in dark mode */
 body.dark-mode .intro-container .btn-warning,
 body.dark-mode .intro-container .btn-info {
     color: #000;
