@@ -4,11 +4,6 @@
         if (!empty($sendResult)) {
             echo $sendResult;
         }
-
-        // Check config
-        if (loadConfig() === null) {
-            echo "<p class='alert alert-danger'>Server not set up properly. Missing or malformed config.json file in the root directory. Copy config.dist.json and adapt values.</p>";
-        }
     ?>
 
     <div id="landingPage" class="container text-center py-5">

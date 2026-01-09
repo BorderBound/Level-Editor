@@ -14,11 +14,6 @@ function resetLevel() {
     $_SESSION["play_history"] = "";
 }
 
-function loadConfig() {
-    $configStr = @file_get_contents("config.json");
-    return json_decode($configStr);
-}
-
 define("ROTATING", true);
 define("BOMBS", true);
 

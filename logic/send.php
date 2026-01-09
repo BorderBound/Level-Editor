@@ -1,8 +1,6 @@
 <?php
 include("logic/levelCode.php");
 
-$config = loadConfig();
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST["save"] ?? '') === "true" && isset($_SESSION["level_data"])) {
 
     $sendResult = "";
