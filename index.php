@@ -14,7 +14,7 @@ include("logic/handleUserInput.php");
     <meta charset="UTF-8">
     <title>BorderBound Level Editor</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="drawable/icon_web.svg">
+    <link rel="icon" href="drawable/icon_web.png">
 
     <!-- Bootstrap CSS (local) -->
     <link rel="stylesheet" href="res/bootstrap.min.css">
@@ -39,7 +39,7 @@ include("logic/handleUserInput.php");
 
                 <!-- Brand -->
                 <a class="navbar-brand d-flex align-items-center mb-0 me-3" href="#">
-                    <img src="drawable/icon_web.svg" width="30" height="30" class="me-2" alt="BorderBound!">
+                    <img src="drawable/icon_web.png" width="30" height="30" class="me-2" alt="BorderBound!">
                     <span class="fs-6 fw-bold">BorderBound! Level Editor</span>
                 </a>
 
